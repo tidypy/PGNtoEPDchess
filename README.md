@@ -11,6 +11,7 @@ To run the application in development mode, you need to have Node.js, npm, and P
     ```bash
     pip install -r backend/requirements.txt
     ```
+    If running Arch Linux you may need to create a Venv to utilize PIP as python will be locked. Or attempt to install the dependencies through AUR.  
 
 2.  **Install frontend dependencies:**
 
