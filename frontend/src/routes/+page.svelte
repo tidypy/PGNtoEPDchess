@@ -29,6 +29,10 @@
     socket.onopen = () => {
       status = 'connected';
       logs = [...logs, 'Connected to backend'];
+      // If PGN file is provided in URL, start processing automatically
+      if (pgnFilePath) {
+        startProcessing();
+      }
     };
 
     socket.onclose = () => {
@@ -86,6 +90,16 @@
       return;
     }
 
+    console.log("Starting processing with settings:", {
+      pgn_input_file: pgnFilePath,
+      output_file: outputFile,
+      min_ply: minPly,
+      max_ply: maxPly,
+      min_elo: minElo,
+      eco_prefix: ecoPrefix,
+      workers: workers,
+    });
+
     const settings = {
       pgn_input_file: pgnFilePath,
       output_file: outputFile,
@@ -106,8 +120,10 @@
       });
       const data = await response.json();
       logs = [...logs, data.message];
+      console.log("Response from backend:", data);
     } catch (error) {
       logs = [...logs, 'Error starting processing: ' + error];
+      console.error("Error starting processing:", error);
     }
   }
 

@@ -1,0 +1,59 @@
+{
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "imports": [
+      "_internal.js"
+    ],
+    "isEntry": true,
+    "src": ".svelte-kit/generated/server/internal.js"
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "imports": [
+      "_ssr.js"
+    ]
+  },
+  "_ssr.js": {
+    "file": "chunks/ssr.js"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/components/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "imports": [
+      "_ssr.js"
+    ],
+    "isEntry": true,
+    "src": "node_modules/@sveltejs/kit/src/runtime/components/error.svelte"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "imports": [
+      "_internal.js",
+      "_ssr.js"
+    ],
+    "isEntry": true,
+    "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js"
+  },
+  "src/routes/+layout.css": {
+    "file": "_app/immutable/assets/_layout.3fa6a3ec.css",
+    "src": "src/routes/+layout.css"
+  },
+  "src/routes/+layout.svelte": {
+    "css": [
+      "_app/immutable/assets/_layout.3fa6a3ec.css"
+    ],
+    "file": "entries/pages/_layout.svelte.js",
+    "imports": [
+      "_ssr.js"
+    ],
+    "isEntry": true,
+    "src": "src/routes/+layout.svelte"
+  },
+  "src/routes/+page.svelte": {
+    "file": "entries/pages/_page.svelte.js",
+    "imports": [
+      "_ssr.js"
+    ],
+    "isEntry": true,
+    "src": "src/routes/+page.svelte"
+  }
+}

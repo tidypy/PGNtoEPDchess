@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Kill any lingering backend processes
+echo "Attempting to kill any old backend processes..."
+pkill -f "python backend/server.py"
+
 # Navigate to the project root (where this script is located)
 cd "$(dirname "$0")"
 

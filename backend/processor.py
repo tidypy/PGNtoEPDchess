@@ -164,16 +164,21 @@ def run_processing(
 
         unique_positions = set()
         total_games_processed = 0
+        processed_temp_files = []
         
         with multiprocessing.Pool(processes=num_workers) as pool:
             completed_chunks = 0
             for temp_file, games_in_chunk in pool.imap_unordered(process_game_chunk, worker_args):
                 if stop_event.is_set():
                     break
+                
+                processed_temp_files.append(temp_file)
                 completed_chunks += 1
                 total_games_processed += games_in_chunk
                 progress = int((total_games_processed / total_games) * 100)
                 progress_callback({"status": "running", "progress": progress, "message": f"Processed {total_games_processed:,} of {total_games:,} games ({completed_chunks} chunks completed)"})
+        
+        temp_files = processed_temp_files
 
         if not stop_event.is_set():
             progress_callback({"status": "running", "progress": 100, "message": "Processing complete. Merging temporary files..."})
