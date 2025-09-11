@@ -68,3 +68,10 @@ Here is the step-by-step plan to generate the complete application. Please follo
 7. **Implement** Svelte Logic: Write the Svelte code to handle user input, manage UI state based on WebSocket messages, and make API calls to the control endpoints.  
 8. **Configure** Tauri Packaging: Add the necessary tauri.conf.json and other configuration files to the root directory. The configuration must properly start the Python backend server as a "sidecar" and load the Svelte frontend for both Windows and Linux builds.  
 9. **Create** Documentation: Generate a README.md file in the root directory that explains the project and provides clear, step-by-step instructions on how to install dependencies (requirements.txt, package.json) and how to build and run the final packaged application on both Windows and Linux.
+
+## **Refinement and Bug Fix TODOs**
+
+*   Refactor the main `run_processing` function into smaller, more focused helper functions to improve code clarity and maintainability.
+*   ~~Add server-side validation for the settings received from the frontend to prevent errors from invalid input like bad file paths.~~ (Implemented)
+*   ~~Expand the unit test suite to cover the core filtering logic in `_is_game_filtered_out` to ensure its reliability.~~ (Implemented)
+*   ~~Improve error reporting from worker processes back to the main process and frontend.~~ (Implemented)
