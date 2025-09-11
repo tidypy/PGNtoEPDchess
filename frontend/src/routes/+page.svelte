@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import io from 'socket.io-client';
+  import { open, save } from '@tauri-apps/api/dialog';
 
   let status = 'disconnected';
   let progress = 0;
   let logs: string[] = [];
-  let pgnFile: FileList;
+  let pgnFilePath = '';
   let outputFile = 'output.epd';
   let minPly = 1;
   let maxPly = 40;
@@ -13,42 +13,81 @@
   let ecoPrefix = '';
   let workers = navigator.hardwareConcurrency || 4;
 
-  let socket;
+  let socket: WebSocket;
 
   onMount(() => {
-    socket = io('ws://127.0.0.1:8000', {
-      transports: ['websocket'],
-    });
+    // Read query parameters for initial values
+    const urlParams = new URLSearchParams(window.location.search);
+    pgnFilePath = urlParams.get('pgnFile') || pgnFilePath;
+    outputFile = urlParams.get('outputFile') || outputFile;
+    workers = parseInt(urlParams.get('workers') || '', 10) || workers;
+    minElo = parseInt(urlParams.get('minElo') || '', 10) || minElo;
+    maxPly = parseInt(urlParams.get('maxPly') || '', 10) || maxPly;
 
-    socket.on('connect', () => {
+    socket = new WebSocket('ws://127.0.0.1:8000/ws');
+
+    socket.onopen = () => {
       status = 'connected';
       logs = [...logs, 'Connected to backend'];
-    });
+    };
 
-    socket.on('disconnect', () => {
+    socket.onclose = () => {
       status = 'disconnected';
       logs = [...logs, 'Disconnected from backend'];
-    });
+    };
 
-    socket.on('message', (data) => {
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
       status = data.status;
       progress = data.progress;
       logs = [...logs, data.message];
-    });
+    };
 
     return () => {
-      socket.disconnect();
+      socket.close();
     };
   });
 
+  async function selectPgnFile() {
+    try {
+      const result = await open({
+        title: 'Select PGN File',
+        multiple: false,
+        filters: [{ name: 'PGN Files', extensions: ['pgn'] }],
+      });
+      if (result) {
+        pgnFilePath = result as string;
+      }
+    } catch (e) {
+      console.error("Could not open file dialog", e);
+      alert("Selecting a file only works in the desktop app version.");
+    }
+  }
+
+  async function selectOutputFile() {
+    try {
+      const result = await save({
+        title: 'Select Output EPD File',
+        defaultPath: outputFile,
+        filters: [{ name: 'EPD Files', extensions: ['epd'] }],
+      });
+      if (result) {
+        outputFile = result;
+      }
+    } catch (e) {
+      console.error("Could not open save dialog", e);
+      alert("Selecting an output file only works in the desktop app version.");
+    }
+  }
+
   async function startProcessing() {
-    if (!pgnFile || pgnFile.length === 0) {
+    if (!pgnFilePath) {
       alert('Please select a PGN file.');
       return;
     }
 
     const settings = {
-      pgn_input_file: pgnFile[0].path,
+      pgn_input_file: pgnFilePath,
       output_file: outputFile,
       min_ply: minPly,
       max_ply: maxPly,
@@ -89,13 +128,25 @@
   <h1 class="text-2xl font-bold mb-4">PGN to EPD Converter</h1>
 
   <div class="grid grid-cols-2 gap-4 mb-4">
-    <div>
+    <div class="flex flex-col">
       <label for="pgn-file" class="block mb-2">PGN File</label>
-      <input type="file" id="pgn-file" bind:files={pgnFile} class="w-full" />
+      <div class="flex">
+        <input type="text" id="pgn-file" bind:value={pgnFilePath} class="w-full p-2 border rounded-l" />
+        <button on:click={selectPgnFile} class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+          Browse
+        </button>
+      </div>
+      <p class="text-xs text-gray-500 mt-1">("Browse" only works in the desktop app)</p>
     </div>
-    <div>
+    <div class="flex flex-col">
       <label for="output-file" class="block mb-2">Output File</label>
-      <input type="text" id="output-file" bind:value={outputFile} class="w-full p-2 border" />
+      <div class="flex">
+        <input type="text" id="output-file" bind:value={outputFile} class="w-full p-2 border rounded-l" />
+        <button on:click={selectOutputFile} class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+          Browse
+        </button>
+      </div>
+      <p class="text-xs text-gray-500 mt-1">("Browse" only works in the desktop app)</p>
     </div>
     <div>
       <label for="min-ply" class="block mb-2">Min Ply</label>

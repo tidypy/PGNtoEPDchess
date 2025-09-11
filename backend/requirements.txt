@@ -1,4 +1,4 @@
 fastapi
 uvicorn
-python-chess
+chess
 websockets

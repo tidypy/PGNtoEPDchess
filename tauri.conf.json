@@ -14,7 +14,11 @@
       "all": false,
       "shell": {
         "all": false,
-        "open": true
+        "open": true,
+        "sidecar": true,
+        "scope": [
+          { "name": "dist/backend-server", "sidecar": true, "args": true }
+        ]
       },
       "fs": {
         "all": true,
@@ -34,6 +38,9 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
+      ],
+      "externalBin": [
+        "dist/backend-server"
       ]
     },
     "security": {
@@ -48,16 +55,6 @@
         "height": 600
       }
     ],
-    "systemTray": null,
-    "sidecar": {
-      "allowed-scripts": ["run-backend"],
-      "scripts": {
-        "run-backend": {
-          "command": "python",
-          "args": ["-m", "uvicorn", "server:app", "--host", "127.0.0.1", "--port", "8000"],
-          "cwd": "../backend"
-        }
-      }
-    }
+    "systemTray": null
   }
 }

@@ -2,11 +2,47 @@
 
 This is a desktop application for converting large PGN chess database files to EPD format.
 
-## Development
+## Project Setup
 
-To run the application in development mode, you need to have Node.js, npm, and Python installed.
+### Backend
 
-1.  **Install Python dependencies:**
+1.  **Install Python Dependencies:**
+
+    Navigate to the `backend` directory and install the required packages.
+
+    ```bash
+    cd backend
+    pip install -r requirements.txt
+    cd ..
+    ```
+
+### Frontend
+
+1.  **Install Frontend Dependencies:**
+
+    Navigate to the `frontend` directory and install the npm packages.
+
+    ```bash
+    cd frontend
+    npm install
+    cd ..
+    ```
+
+## Development Mode
+
+For a smoother development experience, it is recommended to run the backend and frontend servers separately.
+
+1.  **Run the Backend Server:**
+
+    Open a terminal and run the Python server.
+
+    ```bash
+    python backend/server.py
+    ```
+
+2.  **Run the Frontend Server:**
+
+    Open another terminal and run the Svelte development server.
 
     ```bash
     pip install -r backend/requirements.txt
@@ -16,23 +52,29 @@ To run the application in development mode, you need to have Node.js, npm, and P
 2.  **Install frontend dependencies:**
 
     ```bash
-    npm install --prefix frontend
+    pip install pyinstaller
     ```
 
-3.  **Run the application:**
+2.  **Build the Backend Executable:**
 
-    This will start the Svelte frontend and the Python backend server as a sidecar.
+    Run the following command from the root of the project to create the backend executable:
 
     ```bash
-    npx tauri dev
+    pyinstaller --name=backend-server --onefile --noconsole backend/server.py
     ```
 
-## Building
+    This will create a file named `backend-server` (or `backend-server.exe` on Windows) in the `dist` directory.
 
-To build the application for production, run the following command:
+3.  **Configure Tauri:**
 
-```bash
-npx tauri build
-```
+    The `tauri.conf.json` file is already configured to use the `backend-server` executable as a sidecar. You may need to adjust the path to the executable in the `tauri.conf.json` file if you move it from the `dist` directory.
+
+4.  **Build the Tauri Application:**
+
+    Run the following command to build the final application:
+
+    ```bash
+    npx tauri build
+    ```
 
 This will create a standalone executable file in the `target/release/bundle` directory.
