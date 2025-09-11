@@ -1,80 +1,119 @@
 # PGN to EPD GUI
 
-This is a desktop application for converting large PGN chess database files to EPD format.
+This is a cross-platform (Windows, Linux) desktop application for converting large PGN chess database files to EPD format. It features a modern Svelte frontend and a powerful Python backend, wrapped in a Tauri container.
+
+The application is designed to handle long-running, CPU-intensive processing without freezing the UI, providing real-time progress updates and full user control (pause, resume, stop).
+
+## Technology Stack
+
+*   **Frontend:** Svelte with SvelteKit
+*   **Backend:** Python with FastAPI
+*   **Real-time Communication:** WebSockets
+*   **Desktop App Framework:** Tauri
+*   **Python Packaging:** PyInstaller
+
+---
 
 ## Project Setup
 
-### Backend
+Before you can run the application in development mode or build it for production, you need to install the dependencies for both the frontend and the backend.
 
-1.  **Install Python Dependencies:**
+### 1. Backend Dependencies (Python)
 
-    Navigate to the `backend` directory and install the required packages.
+Navigate to the `backend` directory and install the required packages using `pip`. It is highly recommended to use a virtual environment.
 
-    ```bash
-    cd backend
-    pip install -r requirements.txt
-    cd ..
-    ```
+```bash
+# Navigate to the backend directory
+cd backend
 
-### Frontend
+# Create and activate a virtual environment (optional but recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 
-1.  **Install Frontend Dependencies:**
+# Install dependencies
+pip install -r requirements.txt
 
-    Navigate to the `frontend` directory and install the npm packages.
+# Return to the root directory
+cd ..
+```
 
-    ```bash
-    cd frontend
-    npm install
-    cd ..
-    ```
+### 2. Frontend Dependencies (Node.js)
+
+Navigate to the `frontend` directory and install the required packages using `npm`.
+
+```bash
+# Navigate to the frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Return to the root directory
+cd ..
+```
+
+---
 
 ## Development Mode
 
-For a smoother development experience, it is recommended to run the backend and frontend servers separately.
+For a smoother development experience, you can run the backend and frontend servers separately. This allows for features like hot-reloading on the frontend.
 
-1.  **Run the Backend Server:**
+### 1. Run the Backend Server
 
-    Open a terminal and run the Python server.
+Open a terminal in the project's root directory and run the Python FastAPI server.
 
-    ```bash
-    python backend/server.py
-    ```
+```bash
+# Make sure your virtual environment is activated
+python backend/server.py
+```
 
-2.  **Run the Frontend Server:**
+The backend API will be available at `http://127.0.0.1:8000`.
 
-    Open another terminal and run the Svelte development server.
+### 2. Run the Frontend Dev Server
 
-    ```bash
-    pip install -r backend/requirements.txt
-    ```
-    If running Arch Linux you may need to create a Venv to utilize PIP as python will be locked. Or attempt to install the dependencies through AUR.  
+Open a *second* terminal in the project's root directory and run the SvelteKit development server.
 
-2.  **Install frontend dependencies:**
+```bash
+# Navigate to the frontend directory
+cd frontend
 
-    ```bash
-    pip install pyinstaller
-    ```
+# Start the dev server
+npm run dev
+```
 
-2.  **Build the Backend Executable:**
+You can now open your browser to `http://localhost:5173` to see and interact with the application.
 
-    Run the following command from the root of the project to create the backend executable:
+---
 
-    ```bash
-    pyinstaller --name=backend-server --onefile --noconsole backend/server.py
-    ```
+## Building for Production
 
-    This will create a file named `backend-server` (or `backend-server.exe` on Windows) in the `dist` directory.
+To create a single, standalone desktop application, follow these steps. The process involves first building the Python backend into an executable, then building the Tauri application which bundles everything together.
 
-3.  **Configure Tauri:**
+### 1. Install PyInstaller
 
-    The `tauri.conf.json` file is already configured to use the `backend-server` executable as a sidecar. You may need to adjust the path to the executable in the `tauri.conf.json` file if you move it from the `dist` directory.
+`PyInstaller` is used to package the Python server into a single executable file. If you haven't already, install it in your virtual environment.
 
-4.  **Build the Tauri Application:**
+```bash
+pip install pyinstaller
+```
 
-    Run the following command to build the final application:
+### 2. Build the Backend Executable
 
-    ```bash
-    npx tauri build
-    ```
+From the **root of the project**, run the following command to create the backend executable.
 
-This will create a standalone executable file in the `target/release/bundle` directory.
+```bash
+pyinstaller --name=backend-server --onefile --noconsole backend/server.py
+```
+
+This command will create a `dist/` directory containing the `backend-server` executable (`backend-server.exe` on Windows).
+
+### 3. Build the Tauri Application
+
+Finally, with the backend executable in place, you can build the complete Tauri application.
+
+```bash
+# Run the Tauri build command from the root directory
+npx tauri build
+```
+
+This will create the final, distributable application in the `target/release/bundle/` directory. You can find the installer or standalone executable there.
