@@ -1,6 +1,6 @@
 # PGN to EPD GUI
 
-This is a cross-platform (Windows, Linux) desktop application for converting large PGN chess database files to EPD format. It features a modern Svelte frontend and a powerful Python backend, wrapped in a Tauri container.
+This is a cross-platform desktop application for converting large PGN chess database files to EPD format. It features a modern Svelte frontend and a powerful Python backend, wrapped in a Tauri container for Windows and Linux.
 
 The application is designed to handle long-running, CPU-intensive processing without freezing the UI, providing real-time progress updates and full user control (pause, resume, stop).
 
@@ -8,15 +8,11 @@ The application is designed to handle long-running, CPU-intensive processing wit
 
 *   **Frontend:** Svelte with SvelteKit
 *   **Backend:** Python with FastAPI
-*   **Real-time Communication:** WebSockets
-*   **Desktop App Framework:** Tauri
-*   **Python Packaging:** PyInstaller
+*   **Desktop Framework:** Tauri
 
 ---
 
-## Project Setup
-
-Before you can run the application in development mode or build it for production, you need to install the dependencies for both the frontend and the backend.
+## 1. Project Setup
 
 ### 1. Backend Dependencies (Python)
 
@@ -24,7 +20,7 @@ Navigate to the `backend` directory and install the required packages using `pip
 
 ```bash
 # Navigate to the backend directory
-cd backend
+cd /path/to/project/backend
 
 # Create and activate a virtual environment (optional but recommended)
 python -m venv venv
@@ -32,9 +28,6 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Return to the root directory
-cd ..
 ```
 
 ### 2. Frontend Dependencies (Node.js)

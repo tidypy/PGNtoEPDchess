@@ -1,0 +1,6 @@
+{
+  "name": "pgn-to-epd-gui",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Project root for PGN to EPD GUI"
+}

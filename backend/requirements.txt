@@ -1,4 +1,4 @@
 fastapi
-uvicorn
-chess
-websockets
+uvicorn[standard]
+python-chess
+pydantic

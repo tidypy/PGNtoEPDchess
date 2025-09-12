@@ -1,225 +1,264 @@
-import chess.pgn
-import time
-import os
 import multiprocessing
-from typing import Optional, List, Set, Tuple, Dict, Any, Callable, TextIO
+import os
+import time
+import logging
+from pathlib import Path
+import chess.pgn
+import io
+import tempfile
 
-def _create_epd_id_string(game: chess.pgn.Game) -> str:
-    """Creates a detailed EPD 'id' opcode for traceability."""
-    white = game.headers.get("White", "?").replace('"', '\"')
-    black = game.headers.get("Black", "?").replace('"', '\"')
-    date = game.headers.get("Date", "????.??.??").replace('.', '-')
-    eco = game.headers.get("ECO", "?")
-    return f'id "{eco} {date} {white} vs {black}"'
+# Configure logging to file and console for detailed debugging
+# This will create a `processor.log` file in the same directory.
+log_file_path = Path(__file__).resolve().parent / "processor.log"
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(processName)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(log_file_path),
+        logging.StreamHandler()
+    ]
+)
 
-def _get_game_offsets(pgn_file_handle: TextIO) -> List[int]:
+# --- Globals for worker processes ---
+# These are set by the pool initializer to avoid pickling issues, which was
+# the cause of the silent crashes.
+_worker_pause_event = None
+_worker_stop_event = None
+
+def init_worker(pause_event, stop_event):
+    """Initializer for each worker process in the pool."""
+    global _worker_pause_event, _worker_stop_event
+    _worker_pause_event = pause_event
+    _worker_stop_event = stop_event
+    logging.info(f"Worker {os.getpid()} initialized.")
+
+def worker_process(chunk_info, temp_dir, settings):
     """
-    Scans a PGN file for game offsets using chess.pgn.read_headers and skip_game.
+    Processes a single chunk of work.
+    Writes results to a unique temporary file.
     """
-    offsets = []
-    pgn_file_handle.seek(0)
-    while True:
-        offset = pgn_file_handle.tell()
-        headers = chess.pgn.read_headers(pgn_file_handle)
-        if headers is None:
-            break
-        offsets.append(offset)
-        chess.pgn.skip_game(pgn_file_handle) # Skip the rest of the game
-    pgn_file_handle.seek(0) # Reset file pointer for later processing
-    return offsets
+    pause_event = _worker_pause_event
+    stop_event = _worker_stop_event
+    worker_log = logging.getLogger(f"Worker-{os.getpid()}-{chunk_info['id']}")
+    worker_log.info(f"Starting chunk {chunk_info['id']} at offset {chunk_info['offset']} for {chunk_info['num_games']} games.")
 
-def process_game_chunk(args: Tuple) -> Tuple[str, int]:
-    """
-    Worker function to process a list of game offsets from a PGN file.
-    This function is executed by each process in the multiprocessing pool.
-    It writes its findings to a temporary file to conserve memory.
-    Returns the path to the temporary file and the number of games processed.
-    """
-    pgn_input_file, offsets, temp_output_file, min_ply, max_ply, min_elo, target_eco_prefix, pause_event, stop_event = args
-    
-    local_unique_positions = set()
-    games_processed_in_chunk = 0
-    
-    with open(pgn_input_file, 'r', encoding='utf-8') as pgn:
-        for offset in offsets:
-            if stop_event.is_set():
-                break
-            
-            # Check pause/stop more frequently
-            if pause_event.is_set():
-                while pause_event.is_set():
-                    time.sleep(0.1) # Sleep for a short duration to remain responsive
-                    if stop_event.is_set():
-                        break
-                if stop_event.is_set(): # Check again after waking from pause
-                    break
+    # Get filter settings from the main process
+    min_elo = settings.get('min_elo', 0)
+    max_ply = settings.get('max_ply', 1000)
+    eco_prefix = settings.get('eco_prefix', '')
 
-            pgn.seek(offset)
-            try:
-                game = chess.pgn.read_game(pgn)
-                if game is None:
-                    continue
-            except (ValueError, RuntimeError):
-                continue
+    # The broad try/except block has been removed. If a fundamental error like a
+    # file I/O issue occurs, we WANT the worker to fail hard so the main process
+    # knows about it and can report the error correctly.
+    with tempfile.NamedTemporaryFile(dir=temp_dir, mode='w', delete=False, suffix='.epd', encoding='utf-8') as tf:
+        temp_file_path = tf.name
+        positions_written = 0
 
-            if target_eco_prefix and not game.headers.get('ECO', '?').startswith(target_eco_prefix):
-                continue
+        # Open in binary mode to allow seeking to byte offsets.
+        with open(settings['input_file'], 'rb') as pgn_file_binary:
+            pgn_file_binary.seek(chunk_info['offset'])
 
-            try:
-                if min_elo > 0:
-                     white_elo = int(game.headers.get('WhiteElo', '0'))
-                     black_elo = int(game.headers.get('BlackElo', '0'))
-                     if white_elo < min_elo or black_elo < min_elo:
-                         continue
-            except ValueError:
-                continue
+            # Wrap the binary handle in a text-mode reader. The chess library expects strings.
+            # This resolves the TypeError that was causing the worker to fail.
+            pgn_file_text = io.TextIOWrapper(pgn_file_binary, encoding='utf-8', errors='replace')
 
-            id_str = _create_epd_id_string(game)
-            node = game
-            ply = 0
-            while ply < max_ply:
-                if stop_event.is_set(): # Check stop during ply iteration
-                    break
-                if pause_event.is_set(): # Check pause during ply iteration
-                    while pause_event.is_set():
-                        time.sleep(0.1)
-                        if stop_event.is_set():
-                            break
-                    if stop_event.is_set():
-                        break
-
-                if node.is_end():
-                    break
-                
-                node = node.variation(0)
-                ply += 1
-
-                if ply >= min_ply:
-                    board = node.board()
-                    fen = board.fen()
-                    local_unique_positions.add(f"{fen} {id_str}")
-            
-            if stop_event.is_set(): # Check stop after ply iteration
-                break
-
-            games_processed_in_chunk += 1
-    
-    with open(temp_output_file, 'w', encoding='utf-8') as f:
-        for epd_line in local_unique_positions:
-            f.write(epd_line + '\n')
-            
-    return temp_output_file, games_processed_in_chunk
-
-def run_processing(
-    settings: Dict[str, Any],
-    progress_callback: Callable[[Dict[str, Any]], None],
-    pause_event: multiprocessing.Event,
-    stop_event: multiprocessing.Event,
-):
-    """
-    The main processing function.
-    """
-    temp_files = [] # Initialize here to ensure it's always defined for finally block
-    try:
-        pgn_input_file = settings['pgn_input_file']
-        output_file = settings['output_file']
-        min_ply = settings['min_ply']
-        max_ply = settings['max_ply']
-        min_elo = settings['min_elo']
-        eco_prefix = settings['eco_prefix']
-        num_workers = settings.get('workers', os.cpu_count() or 1)
-
-        if min_ply > max_ply:
-            progress_callback({"status": "error", "message": "min_ply cannot be greater than max_ply"})
-            return
-
-        progress_callback({"status": "running", "progress": 0, "message": f"Starting EPD creation from '{pgn_input_file}'..."})
-
-        start_time = time.time()
-
-        try:
-            with open(pgn_input_file, 'r', encoding='utf-8') as pgn:
-                progress_callback({"status": "running", "progress": 0, "message": "Scanning PGN file to find game offsets..."})
-                offsets = _get_game_offsets(pgn)
-        except FileNotFoundError:
-            progress_callback({"status": "error", "message": f"Input file not found at '{pgn_input_file}'"})
-            return
-        
-        total_games = len(offsets)
-        if total_games == 0:
-            progress_callback({"status": "complete", "progress": 100, "message": "No games found in PGN file."})
-            return
-        
-        progress_callback({"status": "running", "progress": 0, "message": f"Found {total_games:,} games. Distributing work to workers..."})
-
-        chunk_size = (total_games + num_workers - 1) // num_workers
-        chunks = [offsets[i:i + chunk_size] for i in range(0, total_games, chunk_size)]
-        
-        temp_files = [f"{output_file}.{i}.tmp" for i in range(len(chunks))]
-
-        worker_args = [
-            (pgn_input_file, chunks[i], temp_files[i], min_ply, max_ply, min_elo, eco_prefix, pause_event, stop_event)
-            for i in range(len(chunks))
-        ]
-
-        unique_positions = set()
-        total_games_processed = 0
-        processed_temp_files = []
-        
-        with multiprocessing.Pool(processes=num_workers) as pool:
-            completed_chunks = 0
-            for temp_file, games_in_chunk in pool.imap_unordered(process_game_chunk, worker_args):
+            for i in range(chunk_info['num_games']):
                 if stop_event.is_set():
+                    worker_log.warning("Stop event detected, terminating chunk processing.")
+                    return None
+
+                if pause_event.is_set():
+                    worker_log.info("Pause event detected, waiting.")
+                    while pause_event.is_set():
+                        if stop_event.is_set():
+                            worker_log.warning("Stop event detected during pause, terminating.")
+                            return None
+                        time.sleep(0.5)
+                    worker_log.info("Resuming.")
+
+                game = chess.pgn.read_game(pgn_file_text)
+                if game is None:
+                    worker_log.warning(f"Read_game returned None after {i} games, ending chunk early.")
                     break
-                
-                processed_temp_files.append(temp_file)
-                completed_chunks += 1
-                total_games_processed += games_in_chunk
-                progress = int((total_games_processed / total_games) * 100)
-                progress_callback({"status": "running", "progress": progress, "message": f"Processed {total_games_processed:,} of {total_games:,} games ({completed_chunks} chunks completed)"})
-        
-        temp_files = processed_temp_files
 
-        if not stop_event.is_set():
-            progress_callback({"status": "running", "progress": 100, "message": "Processing complete. Merging temporary files..."})
+                # --- Filtering and EPD Generation Logic ---
+                # This inner try/except is kept, as it correctly handles
+                # malformed game data without crashing the entire worker.
+                try:
+                    white_elo = int(game.headers.get("WhiteElo", 0))
+                    black_elo = int(game.headers.get("BlackElo", 0))
+                    game_eco = game.headers.get("ECO", "")
 
+                    if (white_elo >= min_elo or black_elo >= min_elo) and game.end().ply() <= max_ply and game_eco.startswith(eco_prefix):
+                        board = game.end()
+                        id_str = f'id "? {game.headers.get("Date", "????.??.??")} {game.headers.get("White", "?")} vs {game.headers.get("Black", "?")}"'
+                        tf.write(board.epd(id=id_str) + '\n')
+                        positions_written += 1
+                except (ValueError, AttributeError) as e:
+                    worker_log.warning(f"Skipping malformed game or headers: {e}")
+                    continue
+
+        worker_log.info(f"Finished chunk {chunk_info['id']}. Wrote {positions_written} positions.")
+        return temp_file_path
+
+def _cleanup_temp_files(temp_files):
+    """Helper to remove a list of temporary files."""
+    logging.info(f"Cleaning up {len(temp_files)} temporary files.")
+    for f in temp_files:
+        if f and os.path.exists(f):
             try:
-                for temp_file in temp_files:
-                    if os.path.exists(temp_file):
-                        with open(temp_file, 'r', encoding='utf-8') as f:
-                            for line in f:
-                                unique_positions.add(line.strip())
-                        os.remove(temp_file) # Clean up temp file immediately after merging
-            except Exception as merge_e:
-                progress_callback({"status": "error", "message": f"Error during merge: {merge_e}"})
-                return
+                os.remove(f)
+                logging.info(f"Removed temporary file: {f}")
+            except OSError as e:
+                logging.error(f"Error removing temporary file {f}: {e}")
 
-            progress_callback({"status": "running", "progress": 100, "message": "Merge complete. Sorting and writing final output file..."})
-            try:
-                with open(output_file, 'w', encoding='utf-8') as f:
-                    for epd_line in sorted(list(unique_positions)):
-                        f.write(epd_line + '\n')
-            except Exception as write_e:
-                progress_callback({"status": "error", "message": f"Error writing output file: {write_e}"})
-                return
+def _merge_files(temp_files, output_file, progress_callback, final_message):
+    """Merges a list of temporary files into the final output file."""
+    valid_temp_files = [f for f in temp_files if f and os.path.exists(f)]
+    logging.info(f"Starting to merge {len(valid_temp_files)} temporary files into {output_file}")
 
-        end_time = time.time()
-        total_time = end_time - start_time
-        
-        if stop_event.is_set():
-             progress_callback({"status": "stopped", "progress": 0, "message": "Processing stopped by user."})
-        else:
-            progress_callback({
-                "status": "complete", 
-                "progress": 100, 
-                "message": f"Success! Found {len(unique_positions):,} unique positions from {total_games:,} games. Results saved to '{output_file}'. Total time: {total_time // 60:.0f} minutes, {total_time % 60:.2f} seconds."
-            })
+    if not valid_temp_files:
+        logging.warning("No temporary files to merge.")
+        progress_callback({"status": "complete", "progress": 100, "message": "No data was processed.", "is_complete": True})
+        return
+
+    try:
+        with open(output_file, 'wb') as out_f:
+            for temp_file in sorted(valid_temp_files):
+                logging.info(f"Merging {temp_file}")
+                with open(temp_file, 'rb') as in_f:
+                    out_f.write(in_f.read())
+
+        logging.info(f"Successfully merged files into {output_file}")
+        progress_callback({"status": "complete", "progress": 100, "message": final_message, "is_complete": True})
 
     except Exception as e:
-        progress_callback({"status": "error", "message": f"An unexpected error occurred: {e}"})
+        logging.error(f"An error occurred during file merging: {e}", exc_info=True)
+        progress_callback({"status": "error", "message": f"Failed to merge temporary files: {e}", "is_complete": True})
     finally:
-        # This block will always execute, ensuring cleanup happens.
-        progress_callback({"status": "running", "progress": 100, "message": "Cleaning up temporary files..."})
-        for temp_file in temp_files:
-            if os.path.exists(temp_file):
-                os.remove(temp_file)
+        # Always clean up temp files after attempting to merge
+        _cleanup_temp_files(valid_temp_files)
+
+def run_processing(settings, progress_callback, pause_event, stop_event, stop_save_flag):
+    """Main processing function, designed to be run in a separate process."""
+    main_log = logging.getLogger("MainProcess")
+    main_log.info(f"Starting processing with settings: {settings}")
+
+    # Create a dedicated temporary directory for this run for cleanliness
+    temp_dir = tempfile.mkdtemp(prefix="pgn-processor-")
+    main_log.info(f"Created temporary directory: {temp_dir}")
+
+    try:
+        # --- Real PGN Chunking Logic ---
+        main_log.info(f"Scanning PGN file to create chunks: {settings['input_file']}")
+        game_offsets = []
+        try:
+            # Use the python-chess library's fast offset scanner. This is the
+            # most robust and performant way to find game start positions.
+            with open(settings['input_file'], 'rb') as pgn_file:
+                # Manually scan for game start markers to get reliable byte offsets.
+                # This is more compatible with older versions of the python-chess
+                # library that may not have the `scan_offsets` function.
+                offset = pgn_file.tell()
+                while line := pgn_file.readline():
+                    if line.startswith(b'[Event '):
+                        game_offsets.append(offset)
+                    offset = pgn_file.tell()
+
+        except FileNotFoundError:
+            main_log.error(f"Input file not found: {settings['input_file']}")
+            progress_callback({"status": "error", "message": f"Input file not found: {settings['input_file']}", "is_complete": True})
+            return
+
+        if not game_offsets:
+            main_log.warning("No games found in PGN file.")
+            progress_callback({"status": "complete", "message": "No games found in the PGN file.", "is_complete": True})
+            return
+
+        chunk_size_games = 2500  # Number of games per worker task
+        chunks = []
+        for i in range(0, len(game_offsets), chunk_size_games):
+            chunk_offsets = game_offsets[i : i + chunk_size_games]
+            chunks.append({'id': i // chunk_size_games, 'offset': chunk_offsets[0], 'num_games': len(chunk_offsets)})
+
+        main_log.info(f"Created {len(chunks)} chunks of work from {len(game_offsets)} games.")
+
+        # Use an initializer to share the events with the worker processes
+        # This is more robust than passing them as arguments directly to the task.
+        with multiprocessing.Pool(
+            processes=settings.get('workers', 4),
+            initializer=init_worker,
+            initargs=(pause_event, stop_event)
+        ) as pool:
+            results = [pool.apply_async(worker_process, (chunk, temp_dir, settings)) for chunk in chunks]
+            main_log.info("All processing tasks submitted to pool. Waiting for completion...")
+
+            # Monitor progress until all tasks are done or a stop is signaled
+            while not all(res.ready() for res in results):
+                if stop_event.is_set():
+                    main_log.info("Stop event received. Breaking from monitoring loop.")
+                    break
+                
+                completed_count = sum(1 for res in results if res.ready())
+                progress = (completed_count / len(results)) * 95  # 95% for processing, 5% for merge
+                progress_callback({
+                    "status": "paused" if pause_event.is_set() else "processing",
+                    "progress": int(progress),
+                    "message": f"Processed {completed_count}/{len(results)} chunks."
+                })
+                time.sleep(1)
+
+            # --- Post-processing Logic ---
+            # This logic correctly handles the three possible outcomes:
+            # 1. Stopped by user.
+            # 2. Finished with one or more worker errors.
+            # 3. Finished successfully.
+
+            main_log.info("Worker monitoring loop finished.")
+
+            if stop_event.is_set():
+                main_log.warning("Processing was stopped by user. Terminating worker pool.")
+                pool.terminate()
+                pool.join()
+                
+                # Get whatever results we can from tasks that finished before termination.
+                temp_files = [res.get() for res in results if res.ready() and res.successful()]
+
+                if stop_save_flag.value:
+                    main_log.info("'Save on stop' is enabled. Merging partial results.")
+                    final_message = f"Processing stopped. Partial results saved to {settings['output_file']}."
+                    _merge_files(temp_files, settings['output_file'], progress_callback, final_message)
+                else:
+                    main_log.info("'Save on stop' is disabled. Discarding results.")
+                    _cleanup_temp_files(temp_files)
+                    progress_callback({"status": "stopped", "message": "Processing stopped and results discarded.", "is_complete": True})
+            else: # Not stopped, so it's either a success or failure.
+                pool.close()
+                pool.join()
+                main_log.info("All tasks have completed. Checking for worker success.")
+                
+                if not all(res.successful() for res in results):
+                    main_log.error("One or more workers failed with an exception. Aborting.")
+                    # Clean up any files that were successfully created before the failure.
+                    successful_files = [res.get() for res in results if res.ready() and res.successful()]
+                    _cleanup_temp_files(successful_files)
+                    progress_callback({"status": "error", "message": "A worker process failed. Check logs for details.", "is_complete": True})
+                else:
+                    # All workers completed without exceptions.
+                    main_log.info("All workers succeeded. Proceeding to merge files.")
+                    temp_files = [res.get() for res in results]
+                    final_message = f"Processing complete. EPD file saved to {settings['output_file']}."
+                    _merge_files(temp_files, settings['output_file'], progress_callback, final_message)
+
+    except Exception as e:
+        main_log.error(f"An unhandled exception occurred in run_processing: {e}", exc_info=True)
+        progress_callback({"status": "error", "message": f"A critical error occurred: {e}", "is_complete": True})
+    finally:
+        # Final cleanup of the temporary directory
+        try:
+            # This might not be empty if cleanup failed, so we use rmtree for robustness
+            import shutil
+            shutil.rmtree(temp_dir)
+            main_log.info(f"Removed temporary directory: {temp_dir}")
+        except OSError as e:
+            main_log.warning(f"Could not remove temporary directory {temp_dir}: {e}")

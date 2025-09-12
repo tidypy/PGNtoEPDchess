@@ -1,0 +1,341 @@
+2025-09-12 10:16:02,833 - Process-2 - INFO - Starting processing with settings: {'inputFile': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'outputFile': '/home/dev/Documents/ChessDB/EPDoutput.epd', 'minElo': 2000, 'maxPly': 40, 'ecoPrefix': '', 'workers': 2}
+2025-09-12 10:16:02,834 - Process-2 - INFO - Created temporary directory: /tmp/pgn-processor-86goniem
+2025-09-12 10:16:02,892 - Process-2 - ERROR - An unhandled exception occurred in run_processing: daemonic processes are not allowed to have children
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 110, in run_processing
+    with multiprocessing.Pool(processes=settings.get('workers', 4)) as pool:
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/multiprocessing/context.py", line 119, in Pool
+    return Pool(processes, initializer, initargs, maxtasksperchild,
+                context=self.get_context())
+  File "/usr/lib/python3.13/multiprocessing/pool.py", line 215, in __init__
+    self._repopulate_pool()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/multiprocessing/pool.py", line 306, in _repopulate_pool
+    return self._repopulate_pool_static(self._ctx, self.Process,
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+                                        self._processes,
+                                        ^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+                                        self._maxtasksperchild,
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+                                        self._wrap_exception)
+                                        ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/multiprocessing/pool.py", line 329, in _repopulate_pool_static
+    w.start()
+    ~~~~~~~^^
+  File "/usr/lib/python3.13/multiprocessing/process.py", line 118, in start
+    assert not _current_process._config.get('daemon'), \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: daemonic processes are not allowed to have children
+2025-09-12 10:16:02,998 - Process-2 - INFO - Removed temporary directory: /tmp/pgn-processor-86goniem
+2025-09-12 11:38:08,935 - MainProcess - INFO - Initializing multiprocessing manager and shared objects...
+2025-09-12 11:38:23,737 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 11:38:23,739 - MainProcess - INFO - Background process started with PID: 274799
+2025-09-12 11:38:23,746 - Process-2 - INFO - Starting processing with settings: {'inputFile': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'outputFile': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'minElo': 1400, 'maxPly': 4, 'ecoPrefix': '', 'workers': 2}
+2025-09-12 11:38:23,747 - Process-2 - INFO - Created temporary directory: /tmp/pgn-processor-w56z33od
+2025-09-12 11:38:23,752 - Process-2 - ERROR - An unhandled exception occurred in run_processing: daemonic processes are not allowed to have children
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 127, in run_processing
+    with multiprocessing.Pool(
+         ~~~~~~~~~~~~~~~~~~~~^
+        processes=settings.get('workers', 4),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        initializer=init_worker,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+        initargs=(pause_event, stop_event)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as pool:
+    ^
+  File "/usr/lib/python3.13/multiprocessing/context.py", line 119, in Pool
+    return Pool(processes, initializer, initargs, maxtasksperchild,
+                context=self.get_context())
+  File "/usr/lib/python3.13/multiprocessing/pool.py", line 215, in __init__
+    self._repopulate_pool()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/multiprocessing/pool.py", line 306, in _repopulate_pool
+    return self._repopulate_pool_static(self._ctx, self.Process,
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+                                        self._processes,
+                                        ^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+                                        self._maxtasksperchild,
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+                                        self._wrap_exception)
+                                        ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/multiprocessing/pool.py", line 329, in _repopulate_pool_static
+    w.start()
+    ~~~~~~~^^
+  File "/usr/lib/python3.13/multiprocessing/process.py", line 118, in start
+    assert not _current_process._config.get('daemon'), \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: daemonic processes are not allowed to have children
+2025-09-12 11:38:23,757 - Process-2 - INFO - Removed temporary directory: /tmp/pgn-processor-w56z33od
+2025-09-12 11:59:59,344 - MainProcess - INFO - Initializing multiprocessing manager and shared objects...
+2025-09-12 12:00:17,995 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 12:00:17,997 - MainProcess - INFO - Background process started with PID: 276962
+2025-09-12 12:00:18,002 - Process-2 - INFO - Starting processing with settings: {'inputFile': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'outputFile': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'minElo': 1400, 'maxPly': 4, 'ecoPrefix': '', 'workers': 2}
+2025-09-12 12:00:18,003 - Process-2 - INFO - Created temporary directory: /tmp/pgn-processor-jhv63e68
+2025-09-12 12:00:18,065 - Process-2 - INFO - All processing tasks submitted to pool. Waiting for completion...
+2025-09-12 12:00:18,065 - ForkPoolWorker-2:1 - INFO - Worker 276967 initialized.
+2025-09-12 12:00:18,066 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 0
+2025-09-12 12:00:18,066 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpsg9c5rxm.epd
+2025-09-12 12:00:18,066 - ForkPoolWorker-2:2 - INFO - Worker 276968 initialized.
+2025-09-12 12:00:18,067 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 1
+2025-09-12 12:00:18,067 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpsrgibjkr.epd
+2025-09-12 12:00:19,070 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 0
+2025-09-12 12:00:19,071 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 2
+2025-09-12 12:00:19,071 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpsee7iv6d.epd
+2025-09-12 12:00:19,072 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 1
+2025-09-12 12:00:19,072 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 3
+2025-09-12 12:00:19,073 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpfky8t13q.epd
+2025-09-12 12:00:20,074 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 2
+2025-09-12 12:00:20,075 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 4
+2025-09-12 12:00:20,075 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpfydxt37b.epd
+2025-09-12 12:00:20,079 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 3
+2025-09-12 12:00:20,079 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 5
+2025-09-12 12:00:20,080 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpcbmzm3q7.epd
+2025-09-12 12:00:21,078 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 4
+2025-09-12 12:00:21,079 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 6
+2025-09-12 12:00:21,079 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpzqys1vd6.epd
+2025-09-12 12:00:21,083 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 5
+2025-09-12 12:00:21,083 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 7
+2025-09-12 12:00:21,083 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpw1171sdq.epd
+2025-09-12 12:00:22,082 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 6
+2025-09-12 12:00:22,082 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 8
+2025-09-12 12:00:22,082 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpeq0sn63i.epd
+2025-09-12 12:00:22,086 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 7
+2025-09-12 12:00:22,086 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 9
+2025-09-12 12:00:22,086 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-jhv63e68/tmpw61ixls8.epd
+2025-09-12 12:00:23,085 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 8
+2025-09-12 12:00:23,089 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 9
+2025-09-12 12:00:24,072 - Process-2 - INFO - Worker monitoring loop finished.
+2025-09-12 12:00:24,078 - Process-2 - INFO - All tasks have completed. Checking for worker success.
+2025-09-12 12:00:24,078 - Process-2 - INFO - All workers succeeded. Proceeding to merge files.
+2025-09-12 12:00:24,079 - Process-2 - ERROR - An unhandled exception occurred in run_processing: 'output_file'
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 189, in run_processing
+    final_message = f"Processing complete. EPD file saved to {settings['output_file']}."
+                                                              ~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'output_file'
+2025-09-12 12:00:24,088 - Process-2 - INFO - Removed temporary directory: /tmp/pgn-processor-jhv63e68
+2025-09-12 12:06:14,942 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 12:06:14,944 - MainProcess - INFO - Background process started with PID: 277425
+2025-09-12 12:06:14,950 - Process-3 - INFO - Starting processing with settings: {'inputFile': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'outputFile': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'minElo': 1400, 'maxPly': 4, 'ecoPrefix': '', 'workers': 2}
+2025-09-12 12:06:14,950 - Process-3 - INFO - Created temporary directory: /tmp/pgn-processor-chwkxjex
+2025-09-12 12:06:14,958 - Process-3 - INFO - All processing tasks submitted to pool. Waiting for completion...
+2025-09-12 12:06:14,959 - ForkPoolWorker-3:1 - INFO - Worker 277430 initialized.
+2025-09-12 12:06:14,960 - ForkPoolWorker-3:1 - INFO - Starting to process chunk 0
+2025-09-12 12:06:14,961 - ForkPoolWorker-3:1 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmpvk6ch7tg.epd
+2025-09-12 12:06:14,961 - ForkPoolWorker-3:2 - INFO - Worker 277431 initialized.
+2025-09-12 12:06:14,962 - ForkPoolWorker-3:2 - INFO - Starting to process chunk 1
+2025-09-12 12:06:14,962 - ForkPoolWorker-3:2 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmpbm8abfck.epd
+2025-09-12 12:06:15,966 - ForkPoolWorker-3:2 - INFO - Finished processing chunk 1
+2025-09-12 12:06:15,967 - ForkPoolWorker-3:1 - INFO - Finished processing chunk 0
+2025-09-12 12:06:15,967 - ForkPoolWorker-3:2 - INFO - Starting to process chunk 2
+2025-09-12 12:06:15,967 - ForkPoolWorker-3:2 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmp3fv7fpwv.epd
+2025-09-12 12:06:15,967 - ForkPoolWorker-3:1 - INFO - Starting to process chunk 3
+2025-09-12 12:06:15,967 - ForkPoolWorker-3:1 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmp3nxr2foh.epd
+2025-09-12 12:06:16,970 - ForkPoolWorker-3:1 - INFO - Finished processing chunk 3
+2025-09-12 12:06:16,971 - ForkPoolWorker-3:1 - INFO - Starting to process chunk 4
+2025-09-12 12:06:16,971 - ForkPoolWorker-3:1 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmpyp3ce0iu.epd
+2025-09-12 12:06:16,971 - ForkPoolWorker-3:2 - INFO - Finished processing chunk 2
+2025-09-12 12:06:16,971 - ForkPoolWorker-3:2 - INFO - Starting to process chunk 5
+2025-09-12 12:06:16,972 - ForkPoolWorker-3:2 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmp2n6y8uyn.epd
+2025-09-12 12:06:17,974 - ForkPoolWorker-3:1 - INFO - Finished processing chunk 4
+2025-09-12 12:06:17,974 - ForkPoolWorker-3:1 - INFO - Starting to process chunk 6
+2025-09-12 12:06:17,975 - ForkPoolWorker-3:1 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmpiziv8f1o.epd
+2025-09-12 12:06:17,975 - ForkPoolWorker-3:2 - INFO - Finished processing chunk 5
+2025-09-12 12:06:17,975 - ForkPoolWorker-3:2 - INFO - Starting to process chunk 7
+2025-09-12 12:06:17,975 - ForkPoolWorker-3:2 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmpsw616n2k.epd
+2025-09-12 12:06:18,979 - ForkPoolWorker-3:2 - INFO - Finished processing chunk 7
+2025-09-12 12:06:18,979 - ForkPoolWorker-3:1 - INFO - Finished processing chunk 6
+2025-09-12 12:06:18,979 - ForkPoolWorker-3:1 - INFO - Starting to process chunk 8
+2025-09-12 12:06:18,979 - ForkPoolWorker-3:1 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmp3cbi5i8h.epd
+2025-09-12 12:06:18,979 - ForkPoolWorker-3:2 - INFO - Starting to process chunk 9
+2025-09-12 12:06:18,979 - ForkPoolWorker-3:2 - INFO - Created temporary file: /tmp/pgn-processor-chwkxjex/tmp7ofxex31.epd
+2025-09-12 12:06:19,982 - ForkPoolWorker-3:2 - INFO - Finished processing chunk 9
+2025-09-12 12:06:19,983 - ForkPoolWorker-3:1 - INFO - Finished processing chunk 8
+2025-09-12 12:06:20,964 - Process-3 - INFO - Worker monitoring loop finished.
+2025-09-12 12:06:20,970 - Process-3 - INFO - All tasks have completed. Checking for worker success.
+2025-09-12 12:06:20,970 - Process-3 - INFO - All workers succeeded. Proceeding to merge files.
+2025-09-12 12:06:20,970 - Process-3 - ERROR - An unhandled exception occurred in run_processing: 'output_file'
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 189, in run_processing
+    final_message = f"Processing complete. EPD file saved to {settings['outputFile']}."
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'output_file'
+2025-09-12 12:06:20,972 - Process-3 - INFO - Removed temporary directory: /tmp/pgn-processor-chwkxjex
+2025-09-12 12:14:25,316 - MainProcess - INFO - Initializing multiprocessing manager and shared objects...
+2025-09-12 12:14:39,941 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 12:14:39,943 - MainProcess - INFO - Background process started with PID: 278165
+2025-09-12 12:14:39,947 - Process-2 - INFO - Starting processing with settings: {'input_file': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'output_file': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'min_elo': 1400, 'max_ply': 4, 'eco_prefix': '', 'workers': 2}
+2025-09-12 12:14:39,948 - Process-2 - INFO - Created temporary directory: /tmp/pgn-processor-_d15rq38
+2025-09-12 12:14:40,025 - Process-2 - INFO - All processing tasks submitted to pool. Waiting for completion...
+2025-09-12 12:14:40,027 - ForkPoolWorker-2:1 - INFO - Worker 278170 initialized.
+2025-09-12 12:14:40,027 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 0
+2025-09-12 12:14:40,027 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmpskfjcx07.epd
+2025-09-12 12:14:40,028 - ForkPoolWorker-2:2 - INFO - Worker 278171 initialized.
+2025-09-12 12:14:40,028 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 1
+2025-09-12 12:14:40,029 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmpl3r_y0r2.epd
+2025-09-12 12:14:41,032 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 1
+2025-09-12 12:14:41,032 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 0
+2025-09-12 12:14:41,032 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 2
+2025-09-12 12:14:41,032 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 3
+2025-09-12 12:14:41,033 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmpgfqjmvnf.epd
+2025-09-12 12:14:41,033 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmptwip9cla.epd
+2025-09-12 12:14:42,036 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 3
+2025-09-12 12:14:42,036 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 4
+2025-09-12 12:14:42,036 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 2
+2025-09-12 12:14:42,036 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmpfpeh2zrb.epd
+2025-09-12 12:14:42,037 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 5
+2025-09-12 12:14:42,037 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmp6175oe_h.epd
+2025-09-12 12:14:43,039 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 5
+2025-09-12 12:14:43,039 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 4
+2025-09-12 12:14:43,040 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 6
+2025-09-12 12:14:43,040 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmpu6c0vx80.epd
+2025-09-12 12:14:43,040 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 7
+2025-09-12 12:14:43,040 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmpc1f3uigz.epd
+2025-09-12 12:14:44,042 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 6
+2025-09-12 12:14:44,043 - ForkPoolWorker-2:1 - INFO - Starting to process chunk 8
+2025-09-12 12:14:44,043 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 7
+2025-09-12 12:14:44,043 - ForkPoolWorker-2:1 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmp92ldl_zw.epd
+2025-09-12 12:14:44,043 - ForkPoolWorker-2:2 - INFO - Starting to process chunk 9
+2025-09-12 12:14:44,043 - ForkPoolWorker-2:2 - INFO - Created temporary file: /tmp/pgn-processor-_d15rq38/tmpdikag3yb.epd
+2025-09-12 12:14:45,046 - ForkPoolWorker-2:1 - INFO - Finished processing chunk 8
+2025-09-12 12:14:45,046 - ForkPoolWorker-2:2 - INFO - Finished processing chunk 9
+2025-09-12 12:14:46,032 - Process-2 - INFO - Worker monitoring loop finished.
+2025-09-12 12:14:46,039 - Process-2 - INFO - All tasks have completed. Checking for worker success.
+2025-09-12 12:14:46,039 - Process-2 - INFO - All workers succeeded. Proceeding to merge files.
+2025-09-12 12:14:46,040 - Process-2 - INFO - Starting to merge 10 temporary files into /home/dev/Documents/ChessDB/TESTepd1.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmp6175oe_h.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmp92ldl_zw.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmpc1f3uigz.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmpdikag3yb.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmpfpeh2zrb.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmpgfqjmvnf.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmpl3r_y0r2.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmpskfjcx07.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmptwip9cla.epd
+2025-09-12 12:14:46,045 - Process-2 - INFO - Merging /tmp/pgn-processor-_d15rq38/tmpu6c0vx80.epd
+2025-09-12 12:14:46,046 - Process-2 - INFO - Successfully merged files into /home/dev/Documents/ChessDB/TESTepd1.epd
+2025-09-12 12:14:46,046 - Process-2 - INFO - Cleaning up 10 temporary files.
+2025-09-12 12:14:46,046 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmpskfjcx07.epd
+2025-09-12 12:14:46,046 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmpl3r_y0r2.epd
+2025-09-12 12:14:46,046 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmptwip9cla.epd
+2025-09-12 12:14:46,046 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmpgfqjmvnf.epd
+2025-09-12 12:14:46,046 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmpfpeh2zrb.epd
+2025-09-12 12:14:46,046 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmp6175oe_h.epd
+2025-09-12 12:14:46,046 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmpu6c0vx80.epd
+2025-09-12 12:14:46,047 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmpc1f3uigz.epd
+2025-09-12 12:14:46,047 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmp92ldl_zw.epd
+2025-09-12 12:14:46,047 - Process-2 - INFO - Removed temporary file: /tmp/pgn-processor-_d15rq38/tmpdikag3yb.epd
+2025-09-12 12:14:46,047 - Process-2 - INFO - Removed temporary directory: /tmp/pgn-processor-_d15rq38
+2025-09-12 12:50:40,433 - MainProcess - INFO - Initializing multiprocessing manager and shared objects...
+2025-09-12 12:50:56,016 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 12:50:56,018 - MainProcess - INFO - Background process started with PID: 281609
+2025-09-12 12:50:56,023 - Process-2 - INFO - Starting processing with settings: {'input_file': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'output_file': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'min_elo': 1400, 'max_ply': 4, 'eco_prefix': '', 'workers': 2}
+2025-09-12 12:50:56,023 - Process-2 - INFO - Created temporary directory: /tmp/pgn-processor-amkrt48h
+2025-09-12 12:50:56,023 - Process-2 - INFO - Scanning PGN file to create chunks: /home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn
+2025-09-12 12:50:56,063 - Process-2 - INFO - Created 1 chunks of work from 50 games.
+2025-09-12 12:50:56,148 - Process-2 - INFO - All processing tasks submitted to pool. Waiting for completion...
+2025-09-12 12:50:56,150 - ForkPoolWorker-2:1 - INFO - Worker 281614 initialized.
+2025-09-12 12:50:56,151 - ForkPoolWorker-2:1 - INFO - Starting chunk 0 at offset 0 for 50 games.
+2025-09-12 12:50:56,151 - ForkPoolWorker-2:2 - INFO - Worker 281615 initialized.
+2025-09-12 12:50:56,152 - ForkPoolWorker-2:1 - ERROR - Error in worker for chunk 0: a bytes-like object is required, not 'str'
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 74, in worker_process
+    game = chess.pgn.read_game(pgn_file)
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/my-venv/lib/python3.13/site-packages/chess/pgn.py", line 1565, in read_game
+    line = handle.readline().lstrip("\ufeff")
+TypeError: a bytes-like object is required, not 'str'
+2025-09-12 12:50:57,150 - Process-2 - INFO - Worker monitoring loop finished.
+2025-09-12 12:50:57,156 - Process-2 - INFO - All tasks have completed. Checking for worker success.
+2025-09-12 12:50:57,156 - Process-2 - INFO - All workers succeeded. Proceeding to merge files.
+2025-09-12 12:50:57,156 - Process-2 - INFO - Starting to merge 0 temporary files into /home/dev/Documents/ChessDB/TESTepd1.epd
+2025-09-12 12:50:57,156 - Process-2 - WARNING - No temporary files to merge.
+2025-09-12 12:50:57,157 - Process-2 - INFO - Removed temporary directory: /tmp/pgn-processor-amkrt48h
+2025-09-12 12:51:33,185 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 12:51:33,187 - MainProcess - INFO - Background process started with PID: 281743
+2025-09-12 12:51:33,195 - Process-3 - INFO - Starting processing with settings: {'input_file': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'output_file': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'min_elo': 1400, 'max_ply': 4, 'eco_prefix': '', 'workers': 2}
+2025-09-12 12:51:33,195 - Process-3 - INFO - Created temporary directory: /tmp/pgn-processor-4qcqa0yu
+2025-09-12 12:51:33,195 - Process-3 - INFO - Scanning PGN file to create chunks: /home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn
+2025-09-12 12:51:33,197 - Process-3 - INFO - Created 1 chunks of work from 50 games.
+2025-09-12 12:51:33,206 - Process-3 - INFO - All processing tasks submitted to pool. Waiting for completion...
+2025-09-12 12:51:33,207 - ForkPoolWorker-3:1 - INFO - Worker 281748 initialized.
+2025-09-12 12:51:33,208 - ForkPoolWorker-3:1 - INFO - Starting chunk 0 at offset 0 for 50 games.
+2025-09-12 12:51:33,208 - ForkPoolWorker-3:2 - INFO - Worker 281750 initialized.
+2025-09-12 12:51:33,209 - ForkPoolWorker-3:1 - ERROR - Error in worker for chunk 0: a bytes-like object is required, not 'str'
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 74, in worker_process
+    game = chess.pgn.read_game(pgn_file)
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/my-venv/lib/python3.13/site-packages/chess/pgn.py", line 1565, in read_game
+    line = handle.readline().lstrip("\ufeff")
+TypeError: a bytes-like object is required, not 'str'
+2025-09-12 12:51:34,208 - Process-3 - INFO - Worker monitoring loop finished.
+2025-09-12 12:51:34,213 - Process-3 - INFO - All tasks have completed. Checking for worker success.
+2025-09-12 12:51:34,213 - Process-3 - INFO - All workers succeeded. Proceeding to merge files.
+2025-09-12 12:51:34,214 - Process-3 - INFO - Starting to merge 0 temporary files into /home/dev/Documents/ChessDB/TESTepd1.epd
+2025-09-12 12:51:34,214 - Process-3 - WARNING - No temporary files to merge.
+2025-09-12 12:51:34,214 - Process-3 - INFO - Removed temporary directory: /tmp/pgn-processor-4qcqa0yu
+2025-09-12 12:51:47,802 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 12:51:47,805 - MainProcess - INFO - Background process started with PID: 281853
+2025-09-12 12:51:47,815 - Process-4 - INFO - Starting processing with settings: {'input_file': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'output_file': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'min_elo': 1400, 'max_ply': 4, 'eco_prefix': '', 'workers': 2}
+2025-09-12 12:51:47,815 - Process-4 - INFO - Created temporary directory: /tmp/pgn-processor-c_4kjyv5
+2025-09-12 12:51:47,815 - Process-4 - INFO - Scanning PGN file to create chunks: /home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn
+2025-09-12 12:51:47,817 - Process-4 - INFO - Created 1 chunks of work from 50 games.
+2025-09-12 12:51:47,826 - ForkPoolWorker-4:1 - INFO - Worker 281858 initialized.
+2025-09-12 12:51:47,826 - Process-4 - INFO - All processing tasks submitted to pool. Waiting for completion...
+2025-09-12 12:51:47,828 - ForkPoolWorker-4:1 - INFO - Starting chunk 0 at offset 0 for 50 games.
+2025-09-12 12:51:47,830 - ForkPoolWorker-4:2 - INFO - Worker 281860 initialized.
+2025-09-12 12:51:47,830 - ForkPoolWorker-4:1 - ERROR - Error in worker for chunk 0: a bytes-like object is required, not 'str'
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 74, in worker_process
+    game = chess.pgn.read_game(pgn_file)
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/my-venv/lib/python3.13/site-packages/chess/pgn.py", line 1565, in read_game
+    line = handle.readline().lstrip("\ufeff")
+TypeError: a bytes-like object is required, not 'str'
+2025-09-12 12:51:48,829 - Process-4 - INFO - Worker monitoring loop finished.
+2025-09-12 12:51:48,834 - Process-4 - INFO - All tasks have completed. Checking for worker success.
+2025-09-12 12:51:48,834 - Process-4 - INFO - All workers succeeded. Proceeding to merge files.
+2025-09-12 12:51:48,834 - Process-4 - INFO - Starting to merge 0 temporary files into /home/dev/Documents/ChessDB/TESTepd1.epd
+2025-09-12 12:51:48,834 - Process-4 - WARNING - No temporary files to merge.
+2025-09-12 12:51:48,835 - Process-4 - INFO - Removed temporary directory: /tmp/pgn-processor-c_4kjyv5
+2025-09-12 12:52:30,038 - MainProcess - INFO - Initializing multiprocessing manager and shared objects...
+2025-09-12 12:52:52,287 - MainProcess - INFO - Initializing multiprocessing manager and shared objects...
+2025-09-12 12:53:04,829 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 12:53:04,832 - MainProcess - INFO - Background process started with PID: 282457
+2025-09-12 12:53:04,844 - Process-2 - INFO - Starting processing with settings: {'input_file': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'output_file': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'min_elo': 1400, 'max_ply': 4, 'eco_prefix': '', 'workers': 2}
+2025-09-12 12:53:04,844 - Process-2 - INFO - Created temporary directory: /tmp/pgn-processor-71ug7f5y
+2025-09-12 12:53:04,845 - Process-2 - INFO - Scanning PGN file to create chunks: /home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn
+2025-09-12 12:53:04,846 - Process-2 - INFO - Created 1 chunks of work from 50 games.
+2025-09-12 12:53:04,860 - Process-2 - INFO - All processing tasks submitted to pool. Waiting for completion...
+2025-09-12 12:53:04,869 - ForkPoolWorker-2:1 - INFO - Worker 282462 initialized.
+2025-09-12 12:53:04,870 - ForkPoolWorker-2:1 - INFO - Starting chunk 0 at offset 0 for 50 games.
+2025-09-12 12:53:04,871 - ForkPoolWorker-2:2 - INFO - Worker 282463 initialized.
+2025-09-12 12:53:04,872 - ForkPoolWorker-2:1 - ERROR - Error in worker for chunk 0: a bytes-like object is required, not 'str'
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 74, in worker_process
+    game = chess.pgn.read_game(pgn_file)
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/my-venv/lib/python3.13/site-packages/chess/pgn.py", line 1565, in read_game
+    line = handle.readline().lstrip("\ufeff")
+TypeError: a bytes-like object is required, not 'str'
+2025-09-12 12:53:05,868 - Process-2 - INFO - Worker monitoring loop finished.
+2025-09-12 12:53:05,880 - Process-2 - INFO - All tasks have completed. Checking for worker success.
+2025-09-12 12:53:05,880 - Process-2 - INFO - All workers succeeded. Proceeding to merge files.
+2025-09-12 12:53:05,880 - Process-2 - INFO - Starting to merge 0 temporary files into /home/dev/Documents/ChessDB/TESTepd1.epd
+2025-09-12 12:53:05,881 - Process-2 - WARNING - No temporary files to merge.
+2025-09-12 12:53:05,882 - Process-2 - INFO - Removed temporary directory: /tmp/pgn-processor-71ug7f5y
+2025-09-12 13:02:19,920 - MainProcess - INFO - Initializing multiprocessing manager and shared objects...
+2025-09-12 13:02:32,950 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 13:02:32,953 - MainProcess - INFO - Background process started with PID: 283423
+2025-09-12 13:02:32,960 - Process-2 - INFO - Starting processing with settings: {'input_file': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'output_file': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'min_elo': 1400, 'max_ply': 4, 'eco_prefix': '', 'workers': 2}
+2025-09-12 13:02:32,961 - Process-2 - INFO - Created temporary directory: /tmp/pgn-processor-qtd5ar6q
+2025-09-12 13:02:32,961 - Process-2 - INFO - Scanning PGN file to create chunks: /home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn
+2025-09-12 13:02:32,961 - Process-2 - ERROR - An unhandled exception occurred in run_processing: module 'chess.pgn' has no attribute 'scan_offsets'
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 159, in run_processing
+    game_offsets = list(chess.pgn.scan_offsets(pgn_file))
+                        ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'chess.pgn' has no attribute 'scan_offsets'
+2025-09-12 13:02:32,964 - Process-2 - INFO - Removed temporary directory: /tmp/pgn-processor-qtd5ar6q

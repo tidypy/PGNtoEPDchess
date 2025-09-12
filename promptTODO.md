@@ -75,3 +75,7 @@ Here is the step-by-step plan to generate the complete application. Please follo
 *   ~~Add server-side validation for the settings received from the frontend to prevent errors from invalid input like bad file paths.~~ (Implemented)
 *   ~~Expand the unit test suite to cover the core filtering logic in `_is_game_filtered_out` to ensure its reliability.~~ (Implemented)
 *   ~~Improve error reporting from worker processes back to the main process and frontend.~~ (Implemented)
+*   **Stabilize Development Environment:** The `uvicorn --reload` flag was found to be unstable with Python's `multiprocessing` library, causing silent backend crashes. The development script (`start_dev.sh`) has been modified to run the server in a stable mode without hot-reloading to guarantee a working backend. (Implemented)
+*   **Fix Worker Process Creation:** Refactored the `multiprocessing.Pool` in `processor.py` to use an `initializer` function. This resolves silent crashes caused by issues with passing shared `Event` objects to worker processes. (Implemented)
+*   **Improve Stop/Cancel UI:** Replaced the native browser `confirm()` dialog with a custom, non-blocking modal in the Svelte UI for a better user experience when stopping a process. (Implemented)
+*   **Add Defensive Error Handling:** Added robust `try...except` blocks to critical backend paths (like the `/start` endpoint) to ensure any errors are logged and reported to the UI instead of causing silent failures. (Implemented)

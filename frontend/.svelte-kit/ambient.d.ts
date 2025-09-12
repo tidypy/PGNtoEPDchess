@@ -87,8 +87,8 @@ declare module '$env/static/private' {
 	export const XKB_DEFAULT_LAYOUT: string;
 	export const npm_config_npm_version: string;
 	export const XDG_SESSION_CLASS: string;
-	export const LC_IDENTIFICATION: string;
 	export const TERM: string;
+	export const LC_IDENTIFICATION: string;
 	export const npm_package_name: string;
 	export const npm_config_prefix: string;
 	export const USER: string;
@@ -220,8 +220,8 @@ declare module '$env/dynamic/private' {
 		XKB_DEFAULT_LAYOUT: string;
 		npm_config_npm_version: string;
 		XDG_SESSION_CLASS: string;
-		LC_IDENTIFICATION: string;
 		TERM: string;
+		LC_IDENTIFICATION: string;
 		npm_package_name: string;
 		npm_config_prefix: string;
 		USER: string;

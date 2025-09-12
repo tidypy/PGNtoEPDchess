@@ -1,6 +1,30 @@
-INFO:     Started server process [234764]
+/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/my-venv/lib/python3.13/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
+* 'allow_population_by_field_name' has been renamed to 'validate_by_name'
+  warnings.warn(message, UserWarning)
+INFO:     Started server process [283229]
 INFO:     Waiting for application startup.
+2025-09-12 13:02:19,920 - MainProcess - INFO - Initializing multiprocessing manager and shared objects...
 INFO:     Application startup complete.
-ERROR:    [Errno 98] error while attempting to bind on address ('127.0.0.1', 8000): [errno 98] address already in use
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:47474 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47490 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:47474 - "OPTIONS /start HTTP/1.1" 200 OK
+2025-09-12 13:02:32,950 - MainProcess - INFO - Preparing to start background process...
+2025-09-12 13:02:32,953 - MainProcess - INFO - Background process started with PID: 283423
+INFO:     127.0.0.1:47474 - "POST /start HTTP/1.1" 200 OK
+2025-09-12 13:02:32,960 - Process-2 - INFO - Starting processing with settings: {'input_file': '/home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn', 'output_file': '/home/dev/Documents/ChessDB/TESTepd1.epd', 'min_elo': 1400, 'max_ply': 4, 'eco_prefix': '', 'workers': 2}
+2025-09-12 13:02:32,961 - Process-2 - INFO - Created temporary directory: /tmp/pgn-processor-qtd5ar6q
+2025-09-12 13:02:32,961 - Process-2 - INFO - Scanning PGN file to create chunks: /home/dev/Documents/ChessDB/Nakamura_chess_com_games_2025-09-07.pgn
+2025-09-12 13:02:32,961 - Process-2 - ERROR - An unhandled exception occurred in run_processing: module 'chess.pgn' has no attribute 'scan_offsets'
+Traceback (most recent call last):
+  File "/home/dev/Documents/Project_Folders/python-EPD-GUI/PGNtoEPDchess/backend/processor.py", line 159, in run_processing
+    game_offsets = list(chess.pgn.scan_offsets(pgn_file))
+                        ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'chess.pgn' has no attribute 'scan_offsets'
+2025-09-12 13:02:32,964 - Process-2 - INFO - Removed temporary directory: /tmp/pgn-processor-qtd5ar6q
+INFO:     connection closed
+INFO:     127.0.0.1:51710 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51712 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     connection closed
